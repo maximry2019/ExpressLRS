@@ -89,12 +89,17 @@ typedef enum : uint8_t
     RATE_LORA_250HZ,
     RATE_LORA_333HZ_8CH,
     RATE_LORA_500HZ,
-    RATE_DVDA_250HZ,
-    RATE_DVDA_500HZ,
+    RATE_DVDA_250HZ, // FLRC
+    RATE_DVDA_500HZ, // FLRC
     RATE_FLRC_500HZ,
     RATE_FLRC_1000HZ,
     RATE_DVDA_50HZ,
     RATE_LORA_200HZ_8CH,
+
+    RATE_FSK_2G4_DVDA_500HZ,
+    RATE_FSK_2G4_1000HZ,
+    RATE_FSK_900_1000HZ,
+    RATE_FSK_900_1000HZ_8CH,
 } expresslrs_RFrates_e;
 
 enum {
@@ -114,6 +119,12 @@ typedef enum : uint8_t
     TX_RADIO_MODE_SWITCH = 3
 } tx_radio_mode_e;
 
+typedef enum : uint8_t
+{
+    TX_NORMAL_MODE      = 0,
+    TX_MAVLINK_MODE     = 1,
+} tx_transmission_mode_e;
+
 // Value used for expresslrs_rf_pref_params_s.DynpowerUpThresholdSnr if SNR should not be used
 #define DYNPOWER_SNR_THRESH_NONE -127
 #define SNR_SCALE(snr) ((int8_t)((float)snr * RADIO_SNR_SCALE))
@@ -124,7 +135,6 @@ typedef enum : uint8_t
 typedef struct expresslrs_rf_pref_params_s
 {
     uint8_t index;
-    expresslrs_RFrates_e enum_rate;
     int16_t RXsensitivity;                // expected min RF sensitivity
     uint16_t TOA;                         // time on air in microseconds
     uint16_t DisconnectTimeoutMs;         // Time without a packet before receiver goes to disconnected (ms)
@@ -207,7 +217,8 @@ enum eSerialProtocol : uint8_t
     PROTOCOL_INVERTED_SBUS,
 	PROTOCOL_SUMD,
     PROTOCOL_DJI_RS_PRO,
-    PROTOCOL_HOTT_TLM
+    PROTOCOL_HOTT_TLM,
+    PROTOCOL_MAVLINK
 };
 
 enum eSerial1Protocol : uint8_t
@@ -259,7 +270,7 @@ enum eAuxChannels : uint8_t
 extern SX127xDriver Radio;
 
 #elif defined(RADIO_LR1121)
-#define RATE_MAX 14
+#define RATE_MAX 16
 #define RATE_BINDING RATE_LORA_50HZ
 #define RATE_DUALBAND_BINDING 9 // 2.4GHz 50Hz
 
